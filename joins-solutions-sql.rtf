@@ -1,0 +1,172 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red30\green60\blue255;\red20\green30\blue185;\red191\green43\blue36;
+\red0\green142\blue37;}
+\margl1440\margr1440\vieww12600\viewh10200\viewkind0
+\deftab770
+\pard\pardeftab770\pardirnatural
+
+\f0\fs32 \cf0 \
+\
+\cf2 CREATE\cf0  \cf2 TABLE\cf0  customers (\
+    id SERIAL \cf2 PRIMARY\cf0  \cf3 KEY\cf0 ,\
+    first_name \cf3 character\cf0  \cf3 varying\cf0 (60),\
+    last_name \cf3 character\cf0  \cf3 varying\cf0 (80)\
+);\
+\
+\cf2 CREATE\cf0  \cf2 TABLE\cf0  addresses (\
+    id SERIAL \cf2 PRIMARY\cf0  \cf3 KEY\cf0 ,\
+    street \cf3 character\cf0  \cf3 varying\cf0 (255),\
+    city \cf3 character\cf0  \cf3 varying\cf0 (60),\
+    state \cf3 character\cf0  \cf3 varying\cf0 (2),\
+    zip \cf3 character\cf0  \cf3 varying\cf0 (12),\
+    address_type \cf3 character\cf0  \cf3 varying\cf0 (8),\
+    customer_id \cf3 integer\cf0  \cf2 REFERENCES\cf0  customers\
+);\
+\
+\cf2 CREATE\cf0  \cf2 TABLE\cf0  orders (\
+    id SERIAL \cf2 PRIMARY\cf0  \cf3 KEY\cf0 ,\
+    order_date date,\
+    total \cf3 numeric\cf0 (4,2),\
+    address_id \cf3 integer\cf0  \cf2 REFERENCES\cf0  addresses\
+);\
+\
+\cf2 CREATE\cf0  \cf2 TABLE\cf0  products (\
+    id SERIAL \cf2 PRIMARY\cf0  \cf3 KEY\cf0 ,\
+    description \cf3 character\cf0  \cf3 varying\cf0 (255),\
+    unit_price \cf3 numeric\cf0 (3,2)\
+);\
+\
+\cf2 CREATE\cf0  \cf2 TABLE\cf0  line_items (\
+    id SERIAL \cf2 PRIMARY\cf0  \cf3 KEY\cf0 ,\
+    unit_price \cf3 numeric\cf0 (3,2),\
+    quantity \cf3 integer\cf0 ,\
+    order_id \cf3 integer\cf0  \cf2 REFERENCES\cf0  orders,\
+    product_id \cf3 integer\cf0  \cf2 REFERENCES\cf0  products\
+);\
+\
+\cf2 CREATE\cf0  \cf2 TABLE\cf0  warehouse (\
+    id SERIAL \cf2 PRIMARY\cf0  \cf3 KEY\cf0 ,\
+    warehouse \cf3 character\cf0  \cf3 varying\cf0 (55),\
+    fulfillment_days \cf3 integer\cf0 \
+);\
+\
+\cf2 CREATE\cf0  \cf2 TABLE\cf0  warehouse_product (\
+    product_id \cf3 integer\cf0  \cf2 NOT\cf0  \cf2 NULL\cf0  \cf2 REFERENCES\cf0  products,\
+    warehouse_id \cf3 integer\cf0  \cf2 NOT\cf0  \cf2 NULL\cf0  \cf2 REFERENCES\cf0  warehouse,\
+    on_hand \cf3 integer\cf0 ,\
+    \cf2 PRIMARY\cf0  \cf3 KEY\cf0  (product_id, warehouse_id)\
+);\
+\
+\cf3 INSERT\cf0  \cf2 INTO\cf0  customers \
+\cf3 VALUES\cf0  (1, \cf4 'Lisa'\cf0 , \cf4 'Bonet'\cf0 ),\
+(2, \cf4 'Charles'\cf0 , \cf4 'Darwin'\cf0 ),\
+(3, \cf4 'George'\cf0 , \cf4 'Foreman'\cf0 ),\
+(4, \cf4 'Lucy'\cf0 , \cf4 'Liu'\cf0 );\
+\
+\cf3 INSERT\cf0  \cf2 INTO\cf0  addresses \
+\cf3 VALUES\cf0  (1, \cf4 '1 Main St'\cf0 , \cf4 'Detroit'\cf0 , \cf4 'MI'\cf0 , \cf4 '31111'\cf0 , \cf4 'home'\cf0 , 1), \
+(2, \cf4 '555 Some Pl'\cf0 , \cf4 'Chicago'\cf0 , \cf4 'IL'\cf0 , \cf4 '60611'\cf0 , \cf4 'business'\cf0 , 1),\
+(3, \cf4 '8900 Linova Ave'\cf0 , \cf4 'Minneapolis'\cf0 , \cf4 'MN'\cf0 , \cf4 '55444'\cf0 , \cf4 'home'\cf0 , 2),\
+(4, \cf4 'PO Box 999'\cf0 , \cf4 'Minneapolis'\cf0 , \cf4 'MN'\cf0 , \cf4 '55334'\cf0 , \cf4 'business'\cf0 , 3),\
+(5, \cf4 '3 Charles Dr'\cf0 , \cf4 'Los Angeles'\cf0 , \cf4 'CA'\cf0 , \cf4 '00000'\cf0 , \cf4 'home'\cf0 , 4),\
+(6, \cf4 '934 Superstar Ave'\cf0 , \cf4 'Portland'\cf0 , \cf4 'OR'\cf0 , \cf4 '99999'\cf0 , \cf4 'business'\cf0 , 4);\
+\
+\cf3 INSERT\cf0  \cf2 INTO\cf0  orders \
+\cf3 VALUES\cf0  (1, \cf4 '2010-03-05'\cf0 , 88.00, 1),\
+(2, \cf4 '2012-02-08'\cf0 , 23.50, 2),\
+(3, \cf4 '2016-02-07'\cf0 , 4.09, 2),\
+(4, \cf4 '2011-03-04'\cf0 , 4.00, 3),\
+(5, \cf4 '2012-09-22'\cf0 , 12.99, 5),\
+(6, \cf4 '2012-09-23'\cf0 , 23.00, 6),\
+(7, \cf4 '2013-05-25'\cf0 , 39.12, 5);\
+\
+\cf3 INSERT\cf0  \cf2 INTO\cf0  products \
+\cf3 VALUES\cf0  (1, \cf4 'toothbrush'\cf0 , 3.00),\
+(2, \cf4 'nail polish - blue'\cf0 , 4.25),\
+(3, \cf4 'generic beer can'\cf0 , 2.50),\
+(4, \cf4 'lysol'\cf0 , 6.00),\
+(5, \cf4 'cheetos'\cf0 , 0.99),\
+(6, \cf4 'diet pepsi'\cf0 , 1.20),\
+(7, \cf4 'wet ones baby wipes'\cf0 , 8.99);\
+\
+\cf3 INSERT\cf0  \cf2 INTO\cf0  line_items \
+\cf3 VALUES\cf0  (1, 5.00, 16, 1, 1),\
+(2, 3.12, 4, 1, 2),\
+(3, 4.00, 2, 2, 3),\
+(4, 7.25, 3, 4, 4),\
+(5, 6.00, 1, 5, 7),\
+(6, 2.34, 6, 6, 5),\
+(7, 1.05, 9, 7, 5);\
+\
+\cf3 INSERT\cf0  \cf2 INTO\cf0  warehouse \cf3 VALUES\cf0  (1, \cf4 'alpha'\cf0 , 2),\
+(2, \cf4 'beta'\cf0 , 3),\
+(3, \cf4 'delta'\cf0 , 4),\
+(4, \cf4 'gamma'\cf0 , 4),\
+(5, \cf4 'epsilon'\cf0 , 5);\
+\
+\cf3 INSERT\cf0  \cf2 INTO\cf0  warehouse_product \
+\cf3 VALUES\cf0  (1, 3, 0),\
+(1, 1, 5),\
+(2, 4, 20),\
+(3, 5, 3),\
+(4, 2, 9),\
+(4, 3, 12),\
+(5, 3, 7),\
+(6, 1, 1),\
+(7, 2, 4),\
+(6, 3, 88),\
+(6, 4, 3);\
+\
+\pard\pardeftab770\pardirnatural
+\cf5 --Tasks\cf0 \
+\cf5 ----Get all customers and their addresses.\cf0 \
+\pard\pardeftab770\pardirnatural
+\cf2 SELECT\cf0  * \cf2 FROM\cf0  \
+\cf4 "customers"\cf0  \
+\cf2 JOIN\cf0  \cf4 "addresses"\cf0  \cf2 ON\cf0  customers.id = addresses.customer_id;\
+\pard\pardeftab770\pardirnatural
+\cf5 --Get all orders and their line items.\cf0 \
+\pard\pardeftab770\pardirnatural
+\cf2 SELECT\cf0  * \cf2 FROM\cf0  \
+\cf4 "orders"\cf0  \
+\cf2 JOIN\cf0  \cf4 "line_items"\cf0  \cf2 ON\cf0  orders.id = line_items.order_id;\
+\pard\pardeftab770\pardirnatural
+\cf5 --Which warehouses have cheetos?\cf0 \
+\pard\pardeftab770\pardirnatural
+\cf2 SELECT\cf0  * \cf2 FROM\cf0  \
+\cf4 "products"\cf0  \
+\cf2 JOIN\cf0  \cf4 "warehouse_product"\cf0  \cf2 ON\cf0  warehouse_product.product_id = products.id \
+\cf2 JOIN\cf0  \cf4 "warehouse"\cf0  \cf2 ON\cf0  warehouse.id = warehouse_product.warehouse_id\
+\cf2 WHERE\cf0  \cf4 "product_id"\cf0  = 5;\
+\pard\pardeftab770\pardirnatural
+\cf5 --Which warehouses have diet pepsi?\cf0 \
+\pard\pardeftab770\pardirnatural
+\cf2 SELECT\cf0  * \cf2 FROM\cf0  \
+\cf4 "products"\cf0  \
+\cf2 JOIN\cf0  \cf4 "warehouse_product"\cf0  \cf2 ON\cf0  warehouse_product.product_id = products.id \
+\cf2 JOIN\cf0  \cf4 "warehouse"\cf0  \cf2 ON\cf0  warehouse.id = warehouse_product.warehouse_id\
+\cf2 WHERE\cf0  \cf4 "description"\cf0  = \cf4 'diet pepsi'\cf0 ;\
+\pard\pardeftab770\pardirnatural
+\cf5 --Get the number of orders for each customer. NOTE: It is OK if those without orders are not included in results.\cf0 \
+\pard\pardeftab770\pardirnatural
+\cf2 SELECT\cf0  customer_id, first_name, last_name, COUNT(orders.id) \cf2 FROM\cf0  \
+\cf4 "orders"\cf0  \
+\cf2 JOIN\cf0  \cf4 "addresses"\cf0  \cf2 ON\cf0  orders.address_id = addresses.id \
+\cf2 JOIN\cf0  \cf4 "customers"\cf0  \cf2 ON\cf0  addresses.customer_id = customers.id\
+\cf2 GROUP\cf0  \cf3 BY\cf0  addresses.customer_id, customers.first_name, customers.last_name;\
+\pard\pardeftab770\pardirnatural
+\cf5 --How many customers do we have?\cf0 \
+\pard\pardeftab770\pardirnatural
+\cf2 SELECT\cf0  COUNT(*) \cf2 FROM\cf0  \cf4 "customers"\cf0 ;\
+\pard\pardeftab770\pardirnatural
+\cf5 --How many products do we carry?\cf0 \
+\pard\pardeftab770\pardirnatural
+\cf2 SELECT\cf0  SUM(on_hand), description\
+\cf2 FROM\cf0  warehouse_product\
+\cf2 JOIN\cf0  \cf4 "products"\cf0  \cf2 ON\cf0  warehouse_product.product_id = products.id \
+\cf2 WHERE\cf0  product_id=6\
+\cf2 GROUP\cf0  \cf3 BY\cf0  products.description;\
+\
+\
+}
